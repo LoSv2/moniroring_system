@@ -10,23 +10,6 @@
 - Журнал нарушений в реальном времени
 - Настраиваемые параметры детекции
 
-## Демонстрация
-
-<img 
-  width="2558" 
-  height="1307" 
-  alt="demo_1" 
-  src="images/demo1.png" 
-/>
-
-<img 
-  width="2173" 
-  height="1305" 
-  alt="demo_2" 
-  src="images/demo2.png" 
-/>
-
-
 ## Технологии
 
 - Python 3.10+
@@ -81,11 +64,11 @@
 - `app.py` - главное приложение
 - `requirements.txt` - зависимости
 - `best.pt` - модель YOLO
-- `students.pkl` - база лиц студентов (kirill, slavik, stepan)
+- `students.pkl` - база лиц студентов
 - `modules/` - модули
 - `monitor_output/` - результаты обработки
 
 ## Автор
 
-Колясинский Степан
+Демачев Артём
 
