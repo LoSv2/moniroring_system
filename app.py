@@ -38,31 +38,127 @@ st.set_page_config(
 # Кастомный стиль
 st.markdown("""
 <style>
+    /* Основные переменные */
+    :root {
+        --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --text-primary: #2d3748;
+        --text-secondary: #4a5568;
+        --accent: #667eea;
+        --success: #48bb78;
+        --warning: #ed8936;
+        --danger: #f56565;
+        --info: #4299e1;
+    }
+
+    /* Заголовок */
     .main-title {
-        color: #2c3e50;
+        background: var(--bg-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         text-align: center;
-        font-size: 2.5em;
-        font-weight: bold;
-        margin-bottom: 20px;
+        font-size: 3em;
+        font-weight: 800;
+        margin-bottom: 30px;
+        letter-spacing: -0.5px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        animation: fadeInDown 0.8s ease-out;
     }
-    .metric-container {
-        background-color: #ecf0f1;
+
+    /* Карточки для метрик */
+    .metric-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
         padding: 20px;
-        border-radius: 10px;
-        margin: 10px 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: center;
     }
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    .metric-value {
+        font-size: 2.5em;
+        font-weight: 700;
+        color: var(--accent);
+        line-height: 1.2;
+    }
+    .metric-label {
+        font-size: 1em;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Бейджи нарушений */
     .violation-badge {
         display: inline-block;
-        padding: 8px 12px;
-        border-radius: 20px;
+        padding: 8px 16px;
+        border-radius: 50px;
         color: white;
-        font-weight: bold;
-        margin: 5px;
+        font-weight: 600;
+        font-size: 0.9em;
+        margin: 4px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        transition: transform 0.2s;
     }
-    .sleeping { background-color: #e74c3c; }
-    .phone { background-color: #e67e22; }
-    .food { background-color: #3498db; }
-    .bottle { background-color: #9b59b6; }
+    .violation-badge:hover {
+        transform: scale(1.05);
+    }
+    .sleeping { background: linear-gradient(135deg, #f56565 0%, #c53030 100%); }
+    .phone { background: linear-gradient(135deg, #ed8936 0%, #c05621 100%); }
+    .food { background: linear-gradient(135deg, #48bb78 0%, #2f855a 100%); }
+    .bottle { background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%); }
+
+    /* Стилизация боковой панели */
+    .css-1d391kg, .css-1lcbmhc {
+        background: linear-gradient(180deg, #f7fafc 0%, #edf2f7 100%);
+    }
+    .sidebar-header {
+        font-size: 1.5em;
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    /* Кнопки */
+    .stButton > button {
+        background: var(--bg-gradient);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    /* Анимации */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Адаптация для мобильных */
+    @media (max-width: 768px) {
+        .main-title { font-size: 2em; }
+        .metric-card { padding: 15px; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -922,29 +1018,40 @@ else:
             col1, col2, col3, col4 = st.columns(4)
             
             with col1:
-                st.metric("Всего нарушений", len(st.session_state.violations_log))
-            
+                st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-value">{len(st.session_state.violations_log)}</div>
+                    <div class="metric-label">Всего нарушений</div>
+                </div>
+                """, unsafe_allow_html=True)
+
             with col2:
-                sleeping_count = sum(
-                    1 for v in st.session_state.violations_log 
-                    if 'sleeping' in v['violation'].lower()
-                )
-                st.metric("Сон", sleeping_count)
-            
+                sleeping_count = sum(1 for v in st.session_state.violations_log if 'sleeping' in v['violation'].lower())
+                st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-value">{sleeping_count}</div>
+                    <div class="metric-label">Сон</div>
+                </div>
+                """, unsafe_allow_html=True)
+
             with col3:
-                phone_count = sum(
-                    1 for v in st.session_state.violations_log 
-                    if 'phone' in v['violation'].lower()
-                )
-                st.metric("Телефон", phone_count)
-            
+                phone_count = sum(1 for v in st.session_state.violations_log if 'phone' in v['violation'].lower())
+                st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-value">{phone_count}</div>
+                    <div class="metric-label">Телефон</div>
+                </div>
+                """, unsafe_allow_html=True)
+
             with col4:
-                food_count = sum(
-                    1 for v in st.session_state.violations_log 
-                    if 'food' in v['violation'].lower() or 
-                       'bottle' in v['violation'].lower()
-                )
-                st.metric("Еда/Напиток", food_count)
+                food_count = sum(1 for v in st.session_state.violations_log 
+                                if 'food' in v['violation'].lower() or 'bottle' in v['violation'].lower())
+                st.markdown(f"""
+                <div class="metric-card">
+                    <div class="metric-value">{food_count}</div>
+                    <div class="metric-label">Еда/Напиток</div>
+                </div>
+                """, unsafe_allow_html=True)
             
             # Графики
             st.subheader("Распределение по типам нарушений")
