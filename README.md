@@ -15,7 +15,7 @@
 <img 
   width="2558" 
   height="1307" 
-  alt="demo_1" 
+  alt="1" 
   src="screen/1.png" 
 />
 
@@ -80,5 +80,6 @@
 ## Автор
 
 Демачев Артём
+
 
 
